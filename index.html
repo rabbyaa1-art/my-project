@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: Arial;
-            background: #0f172a;
+            background: linear-gradient(135deg, #0f172a, #020617);
             color: white;
             text-align: center;
             margin: 0;
@@ -14,27 +14,42 @@
 
         h1 {
             margin-top: 30px;
+            font-size: 40px;
+        }
+
+        p.subtitle {
+            opacity: 0.7;
+            margin-bottom: 20px;
         }
 
         #chatBox {
             width: 60%;
             margin: 20px auto;
-            background: #1e293b;
+            background: rgba(30, 41, 59, 0.8);
             padding: 20px;
-            border-radius: 10px;
-            height: 300px;
+            border-radius: 12px;
+            height: 350px;
             overflow-y: auto;
             text-align: left;
+            box-shadow: 0 0 25px rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+        }
+
+        .user, .bot {
+            padding: 10px;
+            border-radius: 10px;
+            margin: 8px 0;
+            display: inline-block;
+            max-width: 80%;
         }
 
         .user {
-            color: #38bdf8;
-            margin: 5px 0;
+            background: #0ea5e9;
+            align-self: right;
         }
 
         .bot {
-            color: #22c55e;
-            margin: 5px 0;
+            background: #22c55e;
         }
 
         #inputArea {
@@ -61,57 +76,102 @@
         button:hover {
             background: #16a34a;
         }
+
+        /* 🔥 Typing animation */
+        .typing span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            margin: 0 2px;
+            background: white;
+            border-radius: 50%;
+            animation: blink 1.4s infinite;
+        }
+
+        .typing span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.2; }
+            20% { opacity: 1; }
+            100% { opacity: 0.2; }
+        }
     </style>
 </head>
 
 <body>
 
-    <h1>AI Assistant</h1>
-    <p>Ask anything below 👇</p>
+    <h1>AI Assistant 🤖</h1>
+    <p class="subtitle">A simple AI chatbot built using JavaScript</p>
 
     <div id="chatBox"></div>
 
     <div id="inputArea">
-        <input type="text" id="userInput" placeholder="Type your question..." />
+        <input type="text" id="userInput" placeholder="Ask me anything..." />
         <button onclick="sendMessage()">Send</button>
+        <button onclick="clearChat()">Clear</button>
     </div>
 
     <script>
+        document.getElementById("userInput").focus();
+
+        document.getElementById("userInput").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+
         function sendMessage() {
             let input = document.getElementById("userInput").value;
-
             if (input.trim() === "") return;
 
             let chatBox = document.getElementById("chatBox");
 
-            // Show user message
             chatBox.innerHTML += "<p class='user'><b>You:</b> " + input + "</p>";
 
-            // Simple AI logic
+            let botMessage = document.createElement("p");
+            botMessage.className = "bot";
+
+            botMessage.innerHTML = "<b>AI:</b> <span class='typing'><span></span><span></span><span></span></span>";
+            chatBox.appendChild(botMessage);
+
             let response = getAIResponse(input);
 
-            // Show bot response
-            chatBox.innerHTML += "<p class='bot'><b>AI:</b> " + response + "</p>";
+            setTimeout(() => {
+                botMessage.innerHTML = "<b>AI:</b> " + response;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 1200);
 
-            // Clear input
             document.getElementById("userInput").value = "";
-
-            // Auto scroll
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
         function getAIResponse(input) {
             input = input.toLowerCase();
 
-            if (input.includes("hello")) {
-                return "Hi there! 👋";
-            } else if (input.includes("how are you")) {
-                return "I'm just code, but I'm doing great 😄";
-            } else if (input.includes("your name")) {
-                return "I'm your AI Assistant 🤖";
-            } else {
-                return "That's interesting! Tell me more.";
+            if (input.includes("hello") || input.includes("hi")) {
+                return "Hello! 👋 How can I help you today?";
             }
+            if (input.includes("how are you")) {
+                return "I'm doing great! Thanks for asking 😄";
+            }
+            if (input.includes("ai")) {
+                return "AI stands for Artificial Intelligence — it allows machines to think and respond like humans.";
+            }
+            if (input.includes("project")) {
+                return "This project demonstrates a simple AI chatbot with interaction and UI design.";
+            }
+
+            return "That's interesting! I'm still learning, but tell me more 😊";
+        }
+
+        function clearChat() {
+            document.getElementById("chatBox").innerHTML = "";
         }
     </script>
 
