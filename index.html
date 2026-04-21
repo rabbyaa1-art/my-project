@@ -6,78 +6,94 @@
     <style>
         body {
             font-family: Arial;
-            background: linear-gradient(135deg, #0f172a, #020617);
+            margin: 0;
             color: white;
             text-align: center;
-            margin: 0;
+            background: url("bg.jpg") no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* 🌑 Dark overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0,0,0,0.6), rgba(0,0,0,0.9));
+            z-index: -1;
         }
 
         h1 {
             margin-top: 30px;
-            font-size: 40px;
+            font-size: 42px;
+            text-shadow: 0 0 10px #00f7ff;
         }
 
-        p.subtitle {
-            opacity: 0.7;
-            margin-bottom: 20px;
+        .subtitle {
+            opacity: 0.8;
+            margin-bottom: 10px;
         }
 
+        /* 💬 Chat box */
         #chatBox {
             width: 60%;
             margin: 20px auto;
-            background: rgba(30, 41, 59, 0.8);
             padding: 20px;
-            border-radius: 12px;
             height: 350px;
             overflow-y: auto;
             text-align: left;
-            box-shadow: 0 0 25px rgba(0,0,0,0.6);
-            backdrop-filter: blur(10px);
+
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 25px rgba(0,255,255,0.2);
         }
 
         .user, .bot {
             padding: 10px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin: 8px 0;
             display: inline-block;
-            max-width: 80%;
+            max-width: 75%;
         }
 
         .user {
-            background: #0ea5e9;
-            align-self: right;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            box-shadow: 0 0 10px #3b82f6;
         }
 
         .bot {
-            background: #22c55e;
+            background: linear-gradient(135deg, #22c55e, #4ade80);
+            box-shadow: 0 0 10px #22c55e;
         }
 
-        #inputArea {
-            margin-top: 20px;
-        }
-
+        /* Input */
         input {
             padding: 12px;
-            width: 300px;
-            border-radius: 5px;
+            width: 280px;
+            border-radius: 6px;
             border: none;
+            outline: none;
         }
 
         button {
             padding: 12px;
             margin-left: 10px;
             border: none;
-            background: #22c55e;
+            background: linear-gradient(135deg, #f59e0b, #f97316);
             color: white;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
+            box-shadow: 0 0 10px #f97316;
         }
 
         button:hover {
-            background: #16a34a;
+            transform: scale(1.05);
         }
 
-        /* 🔥 Typing animation */
+        /* 🔥 typing dots */
         .typing span {
             display: inline-block;
             width: 6px;
@@ -88,18 +104,29 @@
             animation: blink 1.4s infinite;
         }
 
-        .typing span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
+        .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .typing span:nth-child(3) { animation-delay: 0.4s; }
 
         @keyframes blink {
             0% { opacity: 0.2; }
             20% { opacity: 1; }
             100% { opacity: 0.2; }
+        }
+
+        /* ✨ floating glow particles */
+        .glow {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: cyan;
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            from { transform: translateY(100vh); }
+            to { transform: translateY(-10vh); }
         }
     </style>
 </head>
@@ -107,12 +134,12 @@
 <body>
 
     <h1>AI Assistant 🤖</h1>
-    <p class="subtitle">A simple AI chatbot built using JavaScript</p>
+    <p class="subtitle">Next-gen interactive chatbot experience</p>
 
     <div id="chatBox"></div>
 
-    <div id="inputArea">
-        <input type="text" id="userInput" placeholder="Ask me anything..." />
+    <div style="margin-top:20px;">
+        <input id="userInput" placeholder="Ask me anything..." />
         <button onclick="sendMessage()">Send</button>
         <button onclick="clearChat()">Clear</button>
     </div>
@@ -121,12 +148,10 @@
         document.getElementById("userInput").focus();
 
         document.getElementById("userInput").addEventListener("keypress", function(e) {
-            if (e.key === "Enter") {
-                sendMessage();
-            }
+            if (e.key === "Enter") sendMessage();
         });
 
-        function sendMessage() {
+        async function sendMessage() {
             let input = document.getElementById("userInput").value;
             if (input.trim() === "") return;
 
@@ -136,7 +161,6 @@
 
             let botMessage = document.createElement("p");
             botMessage.className = "bot";
-
             botMessage.innerHTML = "<b>AI:</b> <span class='typing'><span></span><span></span><span></span></span>";
             chatBox.appendChild(botMessage);
 
@@ -148,30 +172,32 @@
             }, 1200);
 
             document.getElementById("userInput").value = "";
-            chatBox.scrollTop = chatBox.scrollHeight;
         }
 
         function getAIResponse(input) {
             input = input.toLowerCase();
 
-            if (input.includes("hello") || input.includes("hi")) {
-                return "Hello! 👋 How can I help you today?";
-            }
-            if (input.includes("how are you")) {
-                return "I'm doing great! Thanks for asking 😄";
-            }
-            if (input.includes("ai")) {
-                return "AI stands for Artificial Intelligence — it allows machines to think and respond like humans.";
-            }
-            if (input.includes("project")) {
-                return "This project demonstrates a simple AI chatbot with interaction and UI design.";
-            }
+            if (input.includes("hello") || input.includes("hi"))
+                return "Hey there 👋 How can I help?";
+            if (input.includes("ai"))
+                return "AI lets machines think and respond intelligently.";
+            if (input.includes("project"))
+                return "This is a modern AI chatbot with UI and animations.";
 
-            return "That's interesting! I'm still learning, but tell me more 😊";
+            return "Interesting 🤔 tell me more!";
         }
 
         function clearChat() {
             document.getElementById("chatBox").innerHTML = "";
+        }
+
+        // ✨ generate floating particles
+        for (let i = 0; i < 20; i++) {
+            let dot = document.createElement("div");
+            dot.className = "glow";
+            dot.style.left = Math.random() * 100 + "vw";
+            dot.style.animationDuration = (4 + Math.random()*6) + "s";
+            document.body.appendChild(dot);
         }
     </script>
 
