@@ -13,7 +13,7 @@
             background-size: cover;
         }
 
-        /* 🌑 Dark overlay */
+        /* 🌑 Overlay */
         body::before {
             content: "";
             position: fixed;
@@ -21,7 +21,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, rgba(0,0,0,0.6), rgba(0,0,0,0.9));
+            background: radial-gradient(circle, rgba(0,0,0,0.6), rgba(0,0,0,0.9));
             z-index: -1;
         }
 
@@ -33,17 +33,18 @@
 
         .subtitle {
             opacity: 0.8;
-            margin-bottom: 10px;
         }
 
-        /* 💬 Chat box */
+        /* 💬 CHAT BOX (FIXED VERTICAL) */
         #chatBox {
             width: 60%;
             margin: 20px auto;
             padding: 20px;
             height: 350px;
             overflow-y: auto;
-            text-align: left;
+
+            display: flex;
+            flex-direction: column;
 
             background: rgba(255,255,255,0.05);
             border-radius: 15px;
@@ -51,25 +52,30 @@
             box-shadow: 0 0 25px rgba(0,255,255,0.2);
         }
 
+        /* 💬 MESSAGES */
         .user, .bot {
-            padding: 10px;
+            padding: 10px 14px;
             border-radius: 12px;
             margin: 8px 0;
-            display: inline-block;
-            max-width: 75%;
+            max-width: 70%;
+            display: block;
         }
 
+        /* user right side */
         .user {
+            align-self: flex-end;
             background: linear-gradient(135deg, #3b82f6, #06b6d4);
             box-shadow: 0 0 10px #3b82f6;
         }
 
+        /* bot left side */
         .bot {
+            align-self: flex-start;
             background: linear-gradient(135deg, #22c55e, #4ade80);
             box-shadow: 0 0 10px #22c55e;
         }
 
-        /* Input */
+        /* input */
         input {
             padding: 12px;
             width: 280px;
@@ -93,7 +99,7 @@
             transform: scale(1.05);
         }
 
-        /* 🔥 typing dots */
+        /* typing animation */
         .typing span {
             display: inline-block;
             width: 6px;
@@ -113,7 +119,7 @@
             100% { opacity: 0.2; }
         }
 
-        /* ✨ floating glow particles */
+        /* floating particles */
         .glow {
             position: fixed;
             width: 6px;
@@ -151,15 +157,15 @@
             if (e.key === "Enter") sendMessage();
         });
 
-        async function sendMessage() {
+        function sendMessage() {
             let input = document.getElementById("userInput").value;
             if (input.trim() === "") return;
 
             let chatBox = document.getElementById("chatBox");
 
-            chatBox.innerHTML += "<p class='user'><b>You:</b> " + input + "</p>";
+            chatBox.innerHTML += "<div class='user'><b>You:</b> " + input + "</div>";
 
-            let botMessage = document.createElement("p");
+            let botMessage = document.createElement("div");
             botMessage.className = "bot";
             botMessage.innerHTML = "<b>AI:</b> <span class='typing'><span></span><span></span><span></span></span>";
             chatBox.appendChild(botMessage);
@@ -179,6 +185,8 @@
 
             if (input.includes("hello") || input.includes("hi"))
                 return "Hey there 👋 How can I help?";
+            if (input.includes("how are you"))
+                return "I'm doing great 😄";
             if (input.includes("ai"))
                 return "AI lets machines think and respond intelligently.";
             if (input.includes("project"))
@@ -191,7 +199,7 @@
             document.getElementById("chatBox").innerHTML = "";
         }
 
-        // ✨ generate floating particles
+        // floating dots
         for (let i = 0; i < 20; i++) {
             let dot = document.createElement("div");
             dot.className = "glow";
