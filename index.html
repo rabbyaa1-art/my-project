@@ -1,11 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Project</title>
+  <title>AI Assistant</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #f4f4f4;
+      padding: 50px;
+    }
+    h1 { color: #333; }
+    input {
+      padding: 10px;
+      width: 300px;
+    }
+    button {
+      padding: 10px;
+      background: black;
+      color: white;
+      border: none;
+    }
+    #response {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <h1>My AI Project</h1>
-  <p>This is a simple app I built using AI.</p>
-  <p>It takes what a user types and gives a helpful response.</p>
+
+  <h1>AI Assistant</h1>
+  <p>Ask anything:</p>
+
+  <input id="userInput" placeholder="Type something..." />
+  <button onclick="reply()">Ask</button>
+
+  <div id="response"></div>
+
+  <script>
+    function reply() {
+      let input = document.getElementById("userInput").value;
+      document.getElementById("response").innerText =
+        "You asked: " + input + ". This is a simple AI-style response.";
+    }
+  </script>
+
 </body>
 </html>
