@@ -1,48 +1,119 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AI Assistant</title>
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      background: #f4f4f4;
-      padding: 50px;
-    }
-    h1 { color: #333; }
-    input {
-      padding: 10px;
-      width: 300px;
-    }
-    button {
-      padding: 10px;
-      background: black;
-      color: white;
-      border: none;
-    }
-    #response {
-      margin-top: 20px;
-      font-weight: bold;
-    }
-  </style>
+    <title>AI Assistant</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            margin: 0;
+        }
+
+        h1 {
+            margin-top: 30px;
+        }
+
+        #chatBox {
+            width: 60%;
+            margin: 20px auto;
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+            height: 300px;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        .user {
+            color: #38bdf8;
+            margin: 5px 0;
+        }
+
+        .bot {
+            color: #22c55e;
+            margin: 5px 0;
+        }
+
+        #inputArea {
+            margin-top: 20px;
+        }
+
+        input {
+            padding: 12px;
+            width: 300px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            padding: 12px;
+            margin-left: 10px;
+            border: none;
+            background: #22c55e;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #16a34a;
+        }
+    </style>
 </head>
+
 <body>
 
-  <h1>AI Assistant</h1>
-  <p>Ask anything:</p>
+    <h1>AI Assistant</h1>
+    <p>Ask anything below 👇</p>
 
-  <input id="userInput" placeholder="Type something..." />
-  <button onclick="reply()">Ask</button>
+    <div id="chatBox"></div>
 
-  <div id="response"></div>
+    <div id="inputArea">
+        <input type="text" id="userInput" placeholder="Type your question..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
 
-  <script>
-    function reply() {
-      let input = document.getElementById("userInput").value;
-      document.getElementById("response").innerText =
-        "You asked: " + input + ". This is a simple AI-style response.";
-    }
-  </script>
+    <script>
+        function sendMessage() {
+            let input = document.getElementById("userInput").value;
+
+            if (input.trim() === "") return;
+
+            let chatBox = document.getElementById("chatBox");
+
+            // Show user message
+            chatBox.innerHTML += "<p class='user'><b>You:</b> " + input + "</p>";
+
+            // Simple AI logic
+            let response = getAIResponse(input);
+
+            // Show bot response
+            chatBox.innerHTML += "<p class='bot'><b>AI:</b> " + response + "</p>";
+
+            // Clear input
+            document.getElementById("userInput").value = "";
+
+            // Auto scroll
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function getAIResponse(input) {
+            input = input.toLowerCase();
+
+            if (input.includes("hello")) {
+                return "Hi there! 👋";
+            } else if (input.includes("how are you")) {
+                return "I'm just code, but I'm doing great 😄";
+            } else if (input.includes("your name")) {
+                return "I'm your AI Assistant 🤖";
+            } else {
+                return "That's interesting! Tell me more.";
+            }
+        }
+    </script>
 
 </body>
 </html>
